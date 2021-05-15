@@ -2,6 +2,7 @@
 #include <iostream>
 #include <conio.h>
 #include <vector>
+#include "utils.h"
 using namespace std;
 
 struct Ship
