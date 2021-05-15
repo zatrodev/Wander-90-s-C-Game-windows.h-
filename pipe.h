@@ -1,6 +1,6 @@
 #pragma once
-#include "ship.h"
-#include "utils.h"
+#include <iostream>
+#include <vector>
 using namespace std;
 
 struct Pipe
