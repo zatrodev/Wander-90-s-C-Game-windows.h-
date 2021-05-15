@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include <utils.h>
 using namespace std;
 
 struct Pipe
