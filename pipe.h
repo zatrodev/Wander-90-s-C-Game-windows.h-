@@ -1,87 +1,74 @@
 #pragma once
-#include "spaceship.h"
+#include "ship.h"
 #include "utils.h"
 using namespace std;
 
 struct Pipe
 {
-    static vector <Pipe> vec_pipes;
-    vector<vector<int>> pipe_coords;
-    int topHeight, botHeight;
-    int pipeX, pipeY;
+    vector <vector<float>> pipe_coords;
+    float topHeight, botHeight;
+    float pipeX, pipeY, pipeSpeed;
 
-    Pipe(int topHeight, int botHeight, int pipeX, int pipeY) : topHeight(topHeight), botHeight(botHeight), pipeX(pipeX), pipeY(pipeY)
-    {
-    }
-
-    void init()
+    Pipe(float topHeight, float botHeight, float pipeX, float pipeY, float pipeSpeed) : topHeight(topHeight), botHeight(botHeight), pipeX(pipeX), pipeY(pipeY), pipeSpeed(pipeSpeed)
     {
         draw_pipe();
-        move();
-        set_pipe_coords();
-        delete_pipe();
     }
 
     void draw_pipe()
     {
-        for (int i = 2; i < topHeight + 2; ++i)
+        pipe_coords.clear();
+        for (float i = 2; i < topHeight + 2; ++i)
         {
             gotoxy(pipeX, i);
-            pipe_coords.push_back(vector<int>{pipeX, i});
+            pipe_coords.push_back(vector<float>{pipeX, i});
             if (i == topHeight + 1)
                 cout << "[_";
             else
                 cout << "[";
 
             gotoxy(pipeX + 2, i);
-            pipe_coords.push_back(vector<int>{pipeX + 2, i});
+            pipe_coords.push_back(vector<float>{pipeX + 2, i});
             cout << "]";
         }
 
-        for (int i = pipeY; i >= pipeY - botHeight; --i)
+        for (float i = pipeY; i >= pipeY - botHeight; --i)
         {
             if (i == pipeY - botHeight)
             {
                 gotoxy(pipeX, i);
-                pipe_coords.push_back(vector<int>{pipeX, i});
+                pipe_coords.push_back(vector<float>{pipeX, i});
+                pipe_coords.push_back(vector<float>{pipeX + 2, i});
                 cout << "[^]";
             }
             else
             {
                 gotoxy(pipeX, i);
-                pipe_coords.push_back(vector<int>{pipeX, i});
+                pipe_coords.push_back(vector<float>{pipeX, i});
                 cout << "[";
 
                 gotoxy(pipeX + 2, i);
-                pipe_coords.push_back(vector<int>{pipeX + 2, i});
+                pipe_coords.push_back(vector<float>{pipeX + 2, i});
                 cout << "]";
             }
         }
     }
 
-    void delete_pipe()
+    void delete_pipe(vector <Pipe> &vec_pipes)
     {
-        if (pipeX < 5)
+        for (vector<float> coords : pipe_coords)
         {
-            for (vector<int> coords : pipe_coords)
-            {
-                gotoxy(coords[0], coords[1]);
-                cout << "";
-            }
-
-            vec_pipes.erase(vec_pipes.begin());
+            gotoxy(coords[0], coords[1]);
+            cout << "   ";
         }
+
+        if (pipeX < 5)
+            vec_pipes.erase(vec_pipes.begin());
     }
 
-
-    void set_pipe_coords()
+    void move(vector <Pipe> &vec_pipes)
     {
-        for (int i = 0; i < pipe_coords.size(); ++i)
-            pipe_coords[i][0] -= 2;
-    }
-
-    void move()
-    {
-        pipeX -= 2;
+        delete_pipe(vec_pipes);
+        pipeX -= pipeSpeed;
+        draw_pipe();
     }
 };
