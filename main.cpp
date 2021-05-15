@@ -1,6 +1,5 @@
 #include <iostream>
 #include <time.h>
-#include <cmath>
 #include "utils.h"
 #include "ship.h"
 #include "pipe.h"
