@@ -7,8 +7,8 @@
 
 #define PIPE_GAP 4
 #define PIPE_SPAWN 40
+#define BULLET_ADD 150
 
-#define BULLET_ADD 100
 using namespace std;
 
 void setup(int &columns, int &rows, float &shipX, float &shipY, bool &gameOver)
@@ -259,10 +259,15 @@ int main()
     vector<Pipe> vec_pipes;
     vector<Bullet> bullets;
 
-    int bulletCount = 0;
-    float shipX, shipY;
-    float topHeight, botHeight, pipeX, pipeY;
-    int color = 0, count = 0;
+    int bulletCount = 0, color = 0, count = 0;
+
+    float shipX;
+    float shipY;
+    float topHeight;
+    float botHeight; 
+    float pipeX; 
+    float pipeY;
+
     bool shoot = false;
 
     setup(columns, rows, shipX, shipY, gameOver);
