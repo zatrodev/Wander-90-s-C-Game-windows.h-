@@ -2,6 +2,8 @@
 #include <iostream>
 #include <vector>
 #include "utils.h"
+
+#define PIPE_THRESHOLD 5
 using namespace std;
 
 struct Pipe
@@ -69,7 +71,7 @@ struct Pipe
             cout << "  ";
         }
 
-        if (pipeX < 5)
+        if (pipeX < PIPE_THRESHOLD)
             vec_pipes.erase(vec_pipes.begin());
     }
 
