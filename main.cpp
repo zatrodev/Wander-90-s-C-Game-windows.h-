@@ -155,7 +155,8 @@ void score(int score, int rows, bool distance_score, vector<Pipe> &vec_pipes, Sh
         static int point = 0;
         for (int i = 0; i < vec_pipes.size(); ++i)
         {
-            if (ship.shipX == vec_pipes[i].pipeX || ship.shipY == vec_pipes[i].pipeY){
+            if (ship.shipX == vec_pipes[i].pipeX || ship.shipY == vec_pipes[i].pipeY)
+            {
                 cout << "Score: " << ++point;
 
                 if (point % 2 == 0 && point != 0)
