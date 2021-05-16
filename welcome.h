@@ -78,7 +78,7 @@ bool welcome()
     gotoxy((columns / 2) - 22, (rows / 2) + i);
     cout << ">>";
 
-    gotoxy((columns / 2) - 20, (rows / 2) + 9);
+    gotoxy((columns / 2) - 22, (rows / 2) + 9);
     cout << "Press [ENTER] to Start";
 
     return true;
