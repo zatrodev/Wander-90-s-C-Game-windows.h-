@@ -6,24 +6,23 @@
 #include "welcome.h"
 using namespace std;
 
-struct Ship
+struct Ship 
 {
     vector<vector<float>> ship_coords;
-    float shipX, shipY, shipSpeed;
+    float shipX, shipY, shipSpeed = 2;
 
-    Ship(float shipX, float shipY, float shipSpeed) : shipX(shipX), shipY(shipY), shipSpeed(shipSpeed)
+    Ship(float shipX, float shipY) : shipX(shipX), shipY(shipY)
     {
-        draw_ship();
+        draw();
     }
 
     void init()
     {
-        draw_ship();
+        draw();
         set_ship_coords();
-        ship_controller();
     }
 
-    void draw_ship()
+    void draw()
     {
         gotoxy(shipX, shipY);
         cout << "_____";
@@ -48,74 +47,11 @@ struct Ship
         };
     }
 
-    void delete_ship()
+    void _delete()
     {
         gotoxy(shipX, shipY);
         cout << "     ";
         gotoxy(shipX, shipY + 1);
         cout << "      ";
-    }
-
-    void ship_controller()
-    {
-        if (wanderMode)
-        {
-            static int count = 0;
-            shipSpeed = 0.5;
-            static bool isUp = true;
-
-            if (kbhit()){
-                if (getch() == 32){
-                    ++count;
-
-                    if (!isUp)
-                        isUp = true;
-                    else
-                        isUp = false;
-                }
-            }
-            
-            if (!isUp && count != 0){
-                delete_ship();
-                shipY -= shipSpeed;
-                draw_ship();
-            }
-
-            else  if (isUp && count != 0) {
-                delete_ship();
-                shipY += shipSpeed;
-                draw_ship();
-            }
-        }
-
-        else
-        {
-            if (kbhit())
-            {
-                switch (getch())
-                {
-                case 'w':
-                    delete_ship();
-                    shipY -= shipSpeed;
-                    draw_ship();
-                    break;
-                case 'a':
-                    delete_ship();
-                    shipX -= shipSpeed + 4;
-                    draw_ship();
-                    break;
-                case 's':
-                    delete_ship();
-                    shipY += shipSpeed;
-                    draw_ship();
-                    break;
-                case 'd':
-                    delete_ship();
-                    shipX += shipSpeed + 4;
-                    draw_ship();
-                    break;
-                }
-            }
-        }
     }
 };
