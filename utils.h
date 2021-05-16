@@ -18,15 +18,6 @@ void getConsoleSize(int &columns, int &rows)
     rows = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
 }
 
-void setWindowSize(int width, int height)
-{
-    HWND console = GetConsoleWindow();
-    RECT ConsoleRect;
-    GetWindowRect(console, &ConsoleRect);
-
-    MoveWindow(console, ConsoleRect.left, ConsoleRect.top, width, height, TRUE);
-}
-
 void hideCursor()
 {
    HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
