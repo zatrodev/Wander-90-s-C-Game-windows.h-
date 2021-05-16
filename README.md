@@ -10,4 +10,6 @@ Game based on my android game called **Wander**.
 <br>
 ![image](https://user-images.githubusercontent.com/79815768/118388053-b5e31b80-b654-11eb-8b30-b99f39cac1b0.png)
 <br>
+<br>
+<br>
 ***NOT FOR COMMERCIAL USE***
