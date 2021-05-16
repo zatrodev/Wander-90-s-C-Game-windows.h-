@@ -2,11 +2,12 @@
 Game based on my android game called **Wander**.
 <br>
 <br>
-![image](https://user-images.githubusercontent.com/79815768/118354148-3d208880-b59c-11eb-8807-b725db2c976b.png)
+![image](https://user-images.githubusercontent.com/79815768/118388127-11150e00-b655-11eb-87f3-95b6ce4a3705.png)
 <br>
 <br>
-![image](https://user-images.githubusercontent.com/79815768/118354157-4d386800-b59c-11eb-9963-08265dbbc0e8.png)
+![image](https://user-images.githubusercontent.com/79815768/118388064-c85d5500-b654-11eb-9bd8-db667b5ee406.png)
 <br>
 <br>
+![image](https://user-images.githubusercontent.com/79815768/118388053-b5e31b80-b654-11eb-8b30-b99f39cac1b0.png)
 <br>
 ***NOT FOR COMMERCIAL USE***
