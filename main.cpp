@@ -4,6 +4,11 @@
 #include "pipe.h"
 #include "welcome.h"
 #include "bullet.h"
+
+#define PIPE_GAP 4
+#define PIPE_SPAWN 40
+
+#define BULLET_ADD 100
 using namespace std;
 
 void setup(int &columns, int &rows, float &shipX, float &shipY, bool &gameOver)
@@ -11,7 +16,6 @@ void setup(int &columns, int &rows, float &shipX, float &shipY, bool &gameOver)
     hideCursor();
 
     getConsoleSize(columns, rows);
-
     system("cls");
 
     shipX = 3;
@@ -48,8 +52,8 @@ void pipe_setup(int columns, int rows, float &topHeight, float &botHeight, float
     srand(time(NULL));
 
     topHeight = rand() % (rows - 12) + 5;
-    botHeight = (rows - 1) - topHeight - 4;
-    pipeX = columns - 30;
+    botHeight = (rows - 1) - topHeight - PIPE_GAP;
+    pipeX = columns - (columns / 5);
     pipeY = rows - 2;
     color += 16;
 
@@ -57,7 +61,7 @@ void pipe_setup(int columns, int rows, float &topHeight, float &botHeight, float
         color += 16;
 
     if (wanderMode)
-        botHeight = (rows - 1) - topHeight - 7;
+        botHeight = (rows - 1) - topHeight - PIPE_GAP + 3;
 }
 
 void controller(Ship &ship, bool &shoot, int &bulletCount)
@@ -279,10 +283,10 @@ int main()
             check_bullet_collision(bullets, vec_pipes, shoot);
         }
 
-        if (count % 100 == 0 && count != 0 && !wanderMode)
+        if (count % BULLET_ADD == 0 && count != 0 && !wanderMode)
             ++bulletCount;
 
-        if (count % 40 == 0)
+        if (count % PIPE_SPAWN == 0)
         {
             pipe_setup(columns, rows, topHeight, botHeight, pipeX, pipeY, color);
             vec_pipes.push_back(Pipe(topHeight, botHeight, pipeX, pipeY, color));
