@@ -8,7 +8,6 @@
 #define PIPE_GAP 4
 #define PIPE_SPAWN 40
 #define BULLET_ADD 150
-
 using namespace std;
 
 void setup(int &columns, int &rows, float &shipX, float &shipY, bool &gameOver)
@@ -16,6 +15,7 @@ void setup(int &columns, int &rows, float &shipX, float &shipY, bool &gameOver)
     hideCursor();
 
     getConsoleSize(columns, rows);
+
     system("cls");
 
     shipX = 3;
@@ -24,7 +24,7 @@ void setup(int &columns, int &rows, float &shipX, float &shipY, bool &gameOver)
     gameOver = false;
 
     if (wanderMode)
-        shipX = 40;
+        shipX = columns / 3;
 }
 
 void layout(int width, int height)
@@ -61,7 +61,7 @@ void pipe_setup(int columns, int rows, float &topHeight, float &botHeight, float
         color += 16;
 
     if (wanderMode)
-        botHeight = (rows - 1) - topHeight - PIPE_GAP + 3;
+        botHeight = (rows - 1) - topHeight - PIPE_GAP - 3;
 }
 
 void controller(Ship &ship, bool &shoot, int &bulletCount)
@@ -236,7 +236,7 @@ void set_mode(int &mode, bool &checkWin, bool &distance_score)
         mode = 5;
     else if (wanderMode)
     {
-        mode = 20;
+        mode = 10;
         checkWin = false;
         distance_score = false;
     }
@@ -261,12 +261,8 @@ int main()
 
     int bulletCount = 0, color = 0, count = 0;
 
-    float shipX;
-    float shipY;
-    float topHeight;
-    float botHeight; 
-    float pipeX; 
-    float pipeY;
+    float shipX, shipY;
+    float topHeight, botHeight, pipeX, pipeY;
 
     bool shoot = false;
 
