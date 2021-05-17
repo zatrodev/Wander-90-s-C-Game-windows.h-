@@ -8,14 +8,19 @@ using namespace std;
 
 struct Pipe
 {
-    vector <vector<int>> pipe_coords;
-    
+    vector<vector<int>> pipe_coords;
+
     int topHeight, botHeight, pipeSpeed = 1;
     int pipeX, pipeY;
     int color;
 
-    Pipe(int topHeight, int botHeight, int pipeX, int pipeY, int color) : topHeight(topHeight), botHeight(botHeight), pipeX(pipeX), pipeY(pipeY), color(color)
-    { 
+    Pipe(int topHeight, int botHeight, int pipeX, int pipeY, int color)
+        : topHeight(topHeight)
+        , botHeight(botHeight)
+        , pipeX(pipeX)
+        , pipeY(pipeY)
+        , color(color)
+    {
         draw();
     }
 
@@ -27,7 +32,8 @@ struct Pipe
         {
             gotoxy(pipeX, i);
             pipe_coords.push_back(vector<int>{pipeX, i});
-            if (i == topHeight - 1){
+            if (i == topHeight - 1)
+            {
                 cout << "[_";
                 pipe_coords.push_back(vector<int>{pipeX + 1, i});
             }
@@ -63,7 +69,7 @@ struct Pipe
         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
     }
 
-    void _delete(vector <Pipe> &vec_pipes)
+    void _delete(vector<Pipe> &pipes)
     {
         for (vector<int> coords : pipe_coords)
         {
@@ -72,12 +78,12 @@ struct Pipe
         }
 
         if (pipeX < PIPE_THRESHOLD)
-            vec_pipes.erase(vec_pipes.begin());
+            pipes.erase(pipes.begin());
     }
 
-    void move(vector <Pipe> &vec_pipes)
+    void move(vector<Pipe> &pipes)
     {
-        _delete(vec_pipes);
+        _delete(pipes);
         pipeX -= pipeSpeed;
         draw();
     }
