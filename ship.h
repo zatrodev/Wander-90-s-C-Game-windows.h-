@@ -11,7 +11,9 @@ struct Ship
     vector<vector<float>> ship_coords;
     float shipX, shipY, shipSpeed = 2;
 
-    Ship(float shipX, float shipY) : shipX(shipX), shipY(shipY)
+    Ship(float shipX, float shipY) 
+        : shipX(shipX)
+        , shipY(shipY)
     {
         draw();
     }
