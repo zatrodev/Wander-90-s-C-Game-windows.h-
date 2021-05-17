@@ -4,13 +4,14 @@
 #include "pipe.h"
 #include "welcome.h"
 #include "bullet.h"
+#include "logic.h"
 
 #define PIPE_GAP 4
 #define PIPE_SPAWN 40
 #define BULLET_ADD 150
 using namespace std;
 
-void setup(int &columns, int &rows, float &shipX, float &shipY, bool &gameOver)
+void setup(int &columns, int &rows, float &shipX, float &shipY)
 {
     hideCursor();
 
@@ -20,8 +21,6 @@ void setup(int &columns, int &rows, float &shipX, float &shipY, bool &gameOver)
 
     shipX = 3;
     shipY = (rows - 2) / 2;
-
-    gameOver = false;
 
     if (wanderMode)
         shipX = columns / 3;
@@ -64,95 +63,11 @@ void pipe_setup(int columns, int rows, float &topHeight, float &botHeight, float
         botHeight = (rows - 1) - topHeight - PIPE_GAP - 3;
 }
 
-void controller(Ship &ship, bool &shoot, int &bulletCount)
-{
-    if (wanderMode)
-    {
-        static int count = 0;
-        ship.shipSpeed = 0.5;
-        static bool isUp = true;
-
-        if (kbhit())
-        {
-            switch (getch())
-            {
-            case 32:
-                ++count;
-
-                if (!isUp)
-                    isUp = true;
-                else
-                    isUp = false;
-
-                break;
-            case 'p':
-                if (bulletCount != 0 && !shoot)
-                {
-                    shoot = true;
-                    --bulletCount;
-                }
-
-                break;
-            }
-        }
-
-        if (!isUp && count != 0)
-        {
-            ship._delete();
-            ship.shipY -= ship.shipSpeed;
-            ship.draw();
-        }
-
-        else if (isUp && count != 0)
-        {
-            ship._delete();
-            ship.shipY += ship.shipSpeed;
-            ship.draw();
-        }
-    }
-
-    else
-    {
-        if (kbhit())
-        {
-            switch (getch())
-            {
-            case 'w':
-                ship._delete();
-                ship.shipY -= ship.shipSpeed;
-                ship.draw();
-                break;
-            case 'a':
-                ship._delete();
-                ship.shipX -= ship.shipSpeed + 4;
-                ship.draw();
-                break;
-            case 's':
-                ship._delete();
-                ship.shipY += ship.shipSpeed;
-                ship.draw();
-                break;
-            case 'd':
-                ship._delete();
-                ship.shipX += ship.shipSpeed + 4;
-                ship.draw();
-                break;
-            case 'p':
-                if (bulletCount != 0 && !shoot)
-                {
-                    shoot = true;
-                    --bulletCount;
-                }
-            }
-        }
-    }
-}
-
-void score(int score, int rows, bool distance_score, vector<Pipe> &vec_pipes, Ship ship, int &bulletCount)
+void score(int score, int rows, Logic &logic, vector<Pipe> &vec_pipes, Ship ship, int &bulletCount)
 {
     gotoxy(0, rows);
 
-    if (distance_score)
+    if (logic.distanceScore)
         cout << "Score: " << score;
     else
     {
@@ -170,90 +85,16 @@ void score(int score, int rows, bool distance_score, vector<Pipe> &vec_pipes, Sh
     }
 }
 
-void print_bullet(int &bulletCount)
-{
-    gotoxy(2, 2);
-    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4);
-    cout << "[|>"
-         << " x" << bulletCount;
-    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
-}
-
-void check_collision(int rows, Ship &ship, vector<Pipe> &vec_pipes, bool &gameOver)
-{
-    for (vector<float> ship_coord : ship.ship_coords)
-    {
-        for (int i = 0; i < vec_pipes.size(); ++i)
-        {
-            for (vector<int> pipe_coord : vec_pipes[i].pipe_coords)
-            {
-                if ((ship_coord[0] == pipe_coord[0] && ship_coord[1] == pipe_coord[1]) || (ship_coord[0] == 0 || ship_coord[1] == 1 || ship_coord[1] == rows - 1))
-                    gameOver = true;
-            }
-        }
-    }
-}
-
-void check_bullet_collision(vector<Bullet> &bullets, vector<Pipe> &vec_pipes, bool &shoot)
-{
-    for (int i = 0; i < vec_pipes.size(); ++i)
-    {
-        for (vector<int> pipe_coord : vec_pipes[i].pipe_coords)
-        {
-            if (bullets[0].bulletX + 2 == pipe_coord[0])
-            {
-                vec_pipes[i]._delete(vec_pipes);
-                bullets[0]._delete();
-                vec_pipes.erase(vec_pipes.begin() + i);
-                bullets.pop_back();
-                shoot = false;
-            }
-        }
-    }
-}
-
-void check_win(Ship ship, int columns, int rows, bool &gameOver)
-{
-    for (vector<float> ship_coord : ship.ship_coords)
-    {
-        for (int i = 0; i < rows; ++i)
-        {
-            if (ship_coord[0] == columns && ship_coord[1] == i)
-            {
-                gameOver = true;
-            }
-        }
-    }
-}
-
-void set_mode(int &mode, bool &checkWin, bool &distance_score)
-{
-    if (easyMode)
-        mode = 20;
-    else if (normalMode)
-        mode = 10;
-    else if (hardMode)
-        mode = 5;
-    else if (wanderMode)
-    {
-        mode = 10;
-        checkWin = false;
-        distance_score = false;
-    }
-}
-
 int main()
 {
     system("cls");
     while (welcome())
         ;
 
-    int mode;
-    bool checkWin = true, distance_score = true;
+    Logic logic;
 
-    set_mode(mode, checkWin, distance_score);
+    logic.set_mode();
 
-    bool gameOver;
     int columns, rows;
 
     vector<Pipe> vec_pipes;
@@ -264,24 +105,22 @@ int main()
     float shipX, shipY;
     float topHeight, botHeight, pipeX, pipeY;
 
-    bool shoot = false;
-
-    setup(columns, rows, shipX, shipY, gameOver);
+    setup(columns, rows, shipX, shipY);
     layout(columns, rows);
 
     Ship ship(shipX, shipY);
-    while (!gameOver)
+    while (!logic.gameOver)
     {
-        controller(ship, shoot, bulletCount);
+        logic.controller(ship, bulletCount);
         ship.init();
 
-        if (shoot)
+        if (logic.shoot)
         {
             if (bullets.size() == 0)
                 bullets.push_back(Bullet(ship.shipX, ship.shipY));
 
             bullets[0].move();
-            check_bullet_collision(bullets, vec_pipes, shoot);
+            logic.check_bullet_collision(bullets, vec_pipes, columns);
         }
 
         if (count % BULLET_ADD == 0 && count != 0 && !wanderMode)
@@ -298,16 +137,16 @@ int main()
             for (int i = 0; i < vec_pipes.size(); ++i)
                 vec_pipes[i].move(vec_pipes);
 
-            check_collision(rows, ship, vec_pipes, gameOver);
-            score(count, rows, distance_score, vec_pipes, ship, bulletCount);
+            logic.check_collision(rows, ship, vec_pipes);
+            score(count, rows, logic, vec_pipes, ship, bulletCount);
         }
 
-        print_bullet(bulletCount);
+        Bullet::print(bulletCount);
 
-        if (checkWin)
-            check_win(ship, columns, rows, gameOver);
+        if (logic.checkWin)
+            logic.check_win(ship, columns, rows);
 
-        Sleep(mode);
+        Sleep(logic.mode);
         ++count;
     }
 
