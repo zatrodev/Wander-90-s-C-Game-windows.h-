@@ -12,8 +12,8 @@
 struct Logic
 {
     int mode;
-    
-    bool checkWin = true; 
+
+    bool checkWin = true;
     bool distanceScore = true;
     bool shoot = false;
     bool gameOver = false;
@@ -33,11 +33,7 @@ struct Logic
                 case 32:
                     ++count;
 
-                    if (!isUp)
-                        isUp = true;
-                    else
-                        isUp = false;
-
+                    isUp = isUp ? false : true;
                     break;
                 case 'p':
                     if (bulletCount != 0 && !shoot)
@@ -123,11 +119,16 @@ struct Logic
         {
             for (vector<int> pipe_coord : pipes[i].pipe_coords)
             {
-                if (bullets[0].bulletX + 2 == pipe_coord[0] || bullets[0].bulletX == columns)
+                if ((bullets[0].bulletX == pipe_coord[0] || bullets[0].bulletX + 1 == pipe_coord[0] || bullets[0].bulletX + 2 == pipe_coord[0]) && bullets[0].bulletY == pipe_coord[1])
                 {
                     pipes[i]._delete(pipes);
                     bullets[0]._delete();
                     pipes.erase(pipes.begin() + i);
+                    bullets.pop_back();
+                    shoot = false;
+                }
+                else if (bullets[0].bulletX + 2 == columns - 1){
+                    bullets[0]._delete();
                     bullets.pop_back();
                     shoot = false;
                 }
