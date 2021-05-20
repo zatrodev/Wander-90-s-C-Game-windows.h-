@@ -26,43 +26,43 @@ struct Pipe
 
     void draw()
     {
-        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
         pipe_coords.clear();
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
         for (int i = 2; i < topHeight; ++i)
         {
-            gotoxy(pipeX, i);
             pipe_coords.push_back(vector<int>{pipeX, i});
+            pipe_coords.push_back(vector<int>{pipeX + 2, i});
             if (i == topHeight - 1)
             {
-                cout << "[_";
+                gotoxy(pipeX, i);
                 pipe_coords.push_back(vector<int>{pipeX + 1, i});
+                cout << "[_]";
             }
-            else
+            else {
+                gotoxy(pipeX, i);
                 cout << "[";
-
-            gotoxy(pipeX + 2, i);
-            pipe_coords.push_back(vector<int>{pipeX + 2, i});
-            cout << "]";
+                
+                gotoxy(pipeX + 2, i);
+                cout << "]";
+            }
         }
 
         for (int i = 0; i < botHeight; ++i)
         {
+            pipe_coords.push_back(vector<int>{pipeX, pipeY - i});
+            pipe_coords.push_back(vector<int>{pipeX + 2, pipeY - i});
             if (i == botHeight - 1)
             {
                 gotoxy(pipeX, pipeY - i);
-                pipe_coords.push_back(vector<int>{pipeX, pipeY - i});
                 pipe_coords.push_back(vector<int>{pipeX + 1, pipeY - i});
-                pipe_coords.push_back(vector<int>{pipeX + 2, pipeY - i});
                 cout << "[^]";
             }
             else
             {
                 gotoxy(pipeX, pipeY - i);
-                pipe_coords.push_back(vector<int>{pipeX, pipeY - i});
                 cout << "[";
 
                 gotoxy(pipeX + 2, pipeY - i);
-                pipe_coords.push_back(vector<int>{pipeX + 2, pipeY - i});
                 cout << "]";
             }
         }
