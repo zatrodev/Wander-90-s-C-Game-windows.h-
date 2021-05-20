@@ -149,6 +149,11 @@ int main()
         Sleep(logic.mode);
         ++count;
     }
+    
+    gotoxy((columns / 2) - 10, rows / 2);
+    cout << "G A M E  O V E R";
+
+    gotoxy(10, rows);
 
     return 0;
 }
