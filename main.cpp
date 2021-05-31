@@ -30,14 +30,14 @@ void setup(int &columns, int &rows, float &shipX, float &shipY)
 void layout(int width, int height)
 {
     gotoxy(0, 1);
-    for (int i = 0; i <= width - 2; ++i)
+    for (int i = 1; i < width; ++i)
         cout << "#";
 
     gotoxy(0, height - 1);
-    for (int i = 0; i <= width - 2; ++i)
+    for (int i = 1; i < width; ++i)
         cout << "#";
 
-    for (int i = 1; i < height; ++i)
+    for (int i = 0; i < height; ++i)
     {
         gotoxy(0, i);
         cout << "|";
