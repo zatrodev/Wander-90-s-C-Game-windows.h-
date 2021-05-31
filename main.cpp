@@ -12,7 +12,7 @@
 #define BULLET_ADD_WANDER 3
 using namespace std;
 
-void setup(int &columns, int &rows, float &shipX, float &shipY)
+void setup(int &columns, int &rows, float &shipX, float &shipY, float &enemyShipX, float &enemyShipY)
 {
     hideCursor();
 
@@ -22,6 +22,9 @@ void setup(int &columns, int &rows, float &shipX, float &shipY)
 
     shipX = 3;
     shipY = (rows - 2) / 2;
+
+    enemyShipX = columns - (columns / 14);
+    enemyShipY = shipY;
 
     if (wanderMode)
         shipX = columns / 3;
@@ -37,7 +40,7 @@ void layout(int width, int height)
     for (int i = 1; i < width; ++i)
         cout << "#";
 
-    for (int i = 0; i < height; ++i)
+    for (int i = 1; i < height; ++i)
     {
         gotoxy(0, i);
         cout << "|";
@@ -61,7 +64,7 @@ void pipe_setup(int columns, int rows, float &topHeight, float &botHeight, float
         color += 16;
 
     if (wanderMode)
-        botHeight = (rows - 1) - topHeight - PIPE_GAP - 3;
+        botHeight = (rows - 1) - topHeight - PIPE_GAP - 2;
 }
 
 void score(int score, int rows, Logic &logic, vector<Pipe> &vec_pipes, Ship ship, int &bulletCount)
@@ -90,7 +93,8 @@ int main()
 {
     system("cls");
     while (welcome())
-        ;
+    {
+    }
 
     Logic logic;
 
@@ -100,20 +104,26 @@ int main()
 
     vector<Pipe> vec_pipes;
     vector<Bullet> bullets;
+    vector<Bullet> enemyBullets;
 
-    int bulletCount = 0, color = 0, count = 0;
+    srand(time(NULL));
+    int bulletCount = 0, color = 0, count = 0, shootCount = 0, enemyBulletShoot = rand() % 40 + 40;
 
-    float shipX, shipY;
+    float shipX, shipY, enemyShipX, enemyShipY;
     float topHeight, botHeight, pipeX, pipeY;
 
-    setup(columns, rows, shipX, shipY);
+    setup(columns, rows, shipX, shipY, enemyShipX, enemyShipY);
     layout(columns, rows);
 
     Ship ship(shipX, shipY);
+    vector<Ship> enemyShip = {Ship(enemyShipX, enemyShipY, true)};
     while (!logic.gameOver)
     {
         logic.controller(ship, bulletCount);
         ship.init();
+
+        if (enemyShip.size() != 0)
+            enemyShip[0].move(rows);
 
         if (logic.shoot)
         {
@@ -121,7 +131,19 @@ int main()
                 bullets.push_back(Bullet(ship.shipX, ship.shipY));
 
             bullets[0].move();
-            logic.check_bullet_collision(bullets, vec_pipes, columns);
+            logic.check_bullet_collision(bullets, vec_pipes, enemyShip, enemyBullets, columns);
+        }
+
+        if (shootCount == enemyBulletShoot && enemyShip.size() != 0){
+            shootCount = 0;
+
+            enemyBullets.push_back(Bullet(enemyShip[0].shipX, enemyShip[0].shipY, true));
+            enemyBulletShoot = rand() % 40 + 40;
+        }
+
+        if (enemyBullets.size() != 0){
+            for (int i = 0; i < enemyBullets.size(); ++i)
+                enemyBullets[i].move();
         }
 
         if (count % BULLET_ADD == 0 && count != 0 && !wanderMode)
@@ -136,9 +158,9 @@ int main()
         if (vec_pipes.size() != 0)
         {
             for (int i = 0; i < vec_pipes.size(); ++i)
-                vec_pipes[i].move(vec_pipes);
+                vec_pipes[i].move();
 
-            logic.check_collision(rows, ship, vec_pipes);
+            logic.check_collision(rows, ship, vec_pipes, enemyBullets);
             score(count, rows, logic, vec_pipes, ship, bulletCount);
         }
 
@@ -149,8 +171,9 @@ int main()
 
         Sleep(logic.mode);
         ++count;
+        ++shootCount;
     }
-    
+
     gotoxy((columns / 2) - 10, rows / 2);
     cout << "G A M E  O V E R";
 
