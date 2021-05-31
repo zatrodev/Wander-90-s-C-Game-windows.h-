@@ -1,9 +1,6 @@
 #pragma once
 #include <conio.h>
 #include "welcome.h"
-#include "ship.h"
-#include "bullet.h"
-#include "pipe.h"
 
 #define EASY 10
 #define NORMAL 5
