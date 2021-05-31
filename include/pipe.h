@@ -3,7 +3,7 @@
 #include <vector>
 #include "utils.h"
 
-#define PIPE_THRESHOLD 5
+#define PIPE_THRESHOLD 6
 using namespace std;
 
 struct Pipe
@@ -69,21 +69,18 @@ struct Pipe
         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
     }
 
-    void _delete(vector<Pipe> &pipes)
+    void _delete()
     {
         for (vector<int> coords : pipe_coords)
         {
             gotoxy(coords[0], coords[1]);
             cout << "  ";
         }
-
-        if (pipeX < PIPE_THRESHOLD)
-            pipes.erase(pipes.begin());
     }
 
-    void move(vector<Pipe> &pipes)
+    void move()
     {
-        _delete(pipes);
+        _delete();
         pipeX -= pipeSpeed;
         draw();
     }
