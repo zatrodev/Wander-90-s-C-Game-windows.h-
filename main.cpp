@@ -61,7 +61,7 @@ void pipe_setup(int columns, int rows, float &topHeight, float &botHeight, float
     color += 16;
 
     if (color == 256)
-        color += 16;
+        color = 16;
 
     if (wanderMode)
         botHeight = (rows - 1) - topHeight - PIPE_GAP - 2;
@@ -134,14 +134,16 @@ int main()
             logic.check_bullet_collision(bullets, vec_pipes, enemyShip, enemyBullets, columns);
         }
 
-        if (shootCount == enemyBulletShoot && enemyShip.size() != 0){
+        if (shootCount == enemyBulletShoot && enemyShip.size() != 0)
+        {
             shootCount = 0;
 
             enemyBullets.push_back(Bullet(enemyShip[0].shipX, enemyShip[0].shipY, true));
             enemyBulletShoot = rand() % 40 + 40;
         }
 
-        if (enemyBullets.size() != 0){
+        if (enemyBullets.size() != 0)
+        {
             for (int i = 0; i < enemyBullets.size(); ++i)
                 enemyBullets[i].move();
         }
