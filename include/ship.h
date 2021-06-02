@@ -48,19 +48,21 @@ struct Ship
 
     void set_ship_coords()
     {
-        ship_coords = {
-            {shipX, shipY},
-            {shipX + 1, shipY},
-            {shipX + 2, shipY},
-            {shipX + 3, shipY},
-            {shipX + 4, shipY},
-            {shipX, shipY + 1},
-            {shipX + 1, shipY + 1},
-            {shipX + 2, shipY + 1},
-            {shipX + 3, shipY + 1},
-            {shipX + 4, shipY + 1},
-            {shipX + 5, shipY + 1},
-        };
+        ship_coords.clear();
+        vector<float> subCoord;
+        for (int i = 0; i <= 5; ++i){
+            if (i == 5) {
+                subCoord = {shipX + i, shipY + 1};
+                ship_coords.push_back(subCoord);
+            }
+            else {
+                subCoord = {shipX + i, shipY};
+                ship_coords.push_back(subCoord);
+
+                subCoord[1]++;
+                ship_coords.push_back(subCoord);
+            }
+        }
     }
 
     void _delete()
@@ -73,30 +75,28 @@ struct Ship
 
     void move(int rows)
     {
+        srand(time(NULL));
         static bool isUp = true;
-        static int count = 1;
-        static int changeDir = rand() % 50 + 40;
+        static int changeDir = isUp ? rand() % int(shipY) + 2 : rand() % (rows - 2 - int(shipY)) + shipY;
 
-        if (round(shipY) == 3 || round(shipY + 1) == rows - 2 || count % changeDir == 0){
+        if (round(shipY - 1) == changeDir || round(shipY) == changeDir || round(shipY + 1) == changeDir){
             isUp = isUp ? false : true;
 
-            changeDir = rand() % 50 + 40;
+            changeDir = isUp ? rand() % int(shipY) + 2 : rand() % (rows - 2 - int(shipY)) + shipY;
         }
         
         if (!isUp)
         {
             _delete();
-            shipY -= shipSpeed;
+            shipY += shipSpeed;
             draw();
         }
 
         else if (isUp)
         {
             _delete();
-            shipY += shipSpeed;
+            shipY -= shipSpeed;
             draw();
         }
-        
-        ++count;
     }
 };
