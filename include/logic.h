@@ -47,14 +47,14 @@ struct Logic
             if (!isUp && start)
             {
                 ship._delete();
-                ship.shipY -= ship.shipSpeed;
+                ship.shipY += ship.shipSpeed;
                 ship.draw();
             }
 
             else if (isUp && start)
             {
                 ship._delete();
-                ship.shipY += ship.shipSpeed;
+                ship.shipY -= ship.shipSpeed;
                 ship.draw();
             }
         }
@@ -153,8 +153,10 @@ struct Logic
             }
         }
 
-        if (enemyShip.size() != 0){
-            if ((bullets[0].bulletX == round(enemyShip[0].shipX) || bullets[0].bulletX + 1 == round(enemyShip[0].shipX) || bullets[0].bulletX + 2 == round(enemyShip[0].shipX)) && (bullets[0].bulletY == round(enemyShip[0].shipY) || bullets[0].bulletY == round(enemyShip[0].shipY + 1))){
+        if (enemyShip.size() != 0)
+        {
+            if ((bullets[0].bulletX == round(enemyShip[0].shipX) || bullets[0].bulletX + 1 == round(enemyShip[0].shipX) || bullets[0].bulletX + 2 == round(enemyShip[0].shipX)) && (bullets[0].bulletY == round(enemyShip[0].shipY) || bullets[0].bulletY == round(enemyShip[0].shipY + 1)))
+            {
                 bullets[0]._delete();
                 bullets.clear();
                 enemyShip[0]._delete();
@@ -162,8 +164,10 @@ struct Logic
                 shoot = false;
             }
 
-            for (int i = 0; i < enemyBullets.size(); ++i){
-                if (bullets[0].bulletX + 2 == round(enemyBullets[i].bulletX) && (bullets[0].bulletY == round(enemyBullets[i].bulletY) || bullets[0].bulletY == round(enemyBullets[i].bulletY + 1))){
+            for (int i = 0; i < enemyBullets.size(); ++i)
+            {
+                if ((bullets[0].bulletX == round(enemyBullets[i].bulletX)|| bullets[0].bulletX + 1 == round(enemyBullets[i].bulletX) || bullets[0].bulletX + 2 == round(enemyBullets[i].bulletX)) && (bullets[0].bulletY == round(enemyBullets[i].bulletY) || bullets[0].bulletY == round(enemyBullets[i].bulletY + 1)))
+                {
                     bullets[0]._delete();
                     enemyBullets[i]._delete();
                     bullets.clear();
